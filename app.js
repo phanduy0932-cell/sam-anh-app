@@ -68,21 +68,49 @@ function App() {
     closed: false
   });
 
-  const [quoteForm, setQuoteForm] = useState({
-    from: "TP.HCM",
-    to: "Vũng Tàu",
-    vehicleType: "7 chỗ",
-    estimatedKm: 200,
-    tollFee: 250000,
-    fuelPrice: "",
-    desiredProfit: ""
-  });
+  const tollRoutes = [
+    {
+      id: 1,
+      from: "TP.HCM",
+      to: "Vũng Tàu",
+      km: 200,
+      tolls: { "7 chỗ": 250000, "16 chỗ": 350000, "29 chỗ": 500000, "45 chỗ": 800000 }
+    },
+    {
+      id: 2,
+      from: "Bệnh viện Biên Hòa",
+      to: "Nha Trang",
+      km: 420,
+      tolls: { "7 chỗ": 900000, "16 chỗ": 1200000, "29 chỗ": 1500000, "45 chỗ": 2200000 }
+    },
+    {
+      id: 3,
+      from: "Biên Hòa",
+      to: "TP.HCM",
+      km: 100,
+      tolls: { "7 chỗ": 150000, "16 chỗ": 250000, "29 chỗ": 350000, "45 chỗ": 500000 }
+    },
+    {
+      id: 4,
+      from: "Biên Hòa",
+      to: "Đà Lạt",
+      km: 620,
+      tolls: { "7 chỗ": 1200000, "16 chỗ": 1700000, "29 chỗ": 2400000, "45 chỗ": 3400000 }
+    },
+    {
+      id: 5,
+      from: "Biên Hòa",
+      to: "Đà Nẵng",
+      km: 900,
+      tolls: { "7 chỗ": 1500000, "16 chỗ": 2200000, "29 chỗ": 3000000, "45 chỗ": 4500000 }
+    }
+  ];
 
   const fuelConsumption = {
-    "7 chỗ": 10,
-    "16 chỗ": 12,
-    "29 chỗ": 22,
-    "45 chỗ": 35
+    "7 chỗ": { litersPer100Km: 10, fuelType: "Xăng" },
+    "16 chỗ": { litersPer100Km: 12, fuelType: "Dầu" },
+    "29 chỗ": { litersPer100Km: 22, fuelType: "Dầu" },
+    "45 chỗ": { litersPer100Km: 35, fuelType: "Dầu" }
   };
 
   const kmPricing = {
@@ -92,11 +120,17 @@ function App() {
     "45 chỗ": { normal: 35000, over300: 31500 }
   };
 
-  const tollRoutes = [
-    { from: "TP.HCM", to: "Vũng Tàu", km: 200, tolls: { "7 chỗ": 250000, "16 chỗ": 350000, "29 chỗ": 500000, "45 chỗ": 800000 } },
-    { from: "Bệnh viện Biên Hòa", to: "Nha Trang", km: 420, tolls: { "7 chỗ": 900000, "16 chỗ": 1200000, "29 chỗ": 1500000, "45 chỗ": 2200000 } },
-    { from: "Biên Hòa", to: "TP.HCM", km: 100, tolls: { "7 chỗ": 150000, "16 chỗ": 250000, "29 chỗ": 350000, "45 chỗ": 500000 } }
-  ];
+  const [quoteForm, setQuoteForm] = useState({
+    routeId: 1,
+    from: tollRoutes[0].from,
+    to: tollRoutes[0].to,
+    vehicleType: "7 chỗ",
+    estimatedKm: tollRoutes[0].km,
+    tollFee: tollRoutes[0].tolls["7 chỗ"],
+    fuelPrice: "",
+    desiredProfit: "",
+    note: ""
+  });
 
   function fmt(v) {
     return Number(v || 0).toLocaleString("vi-VN");
@@ -117,15 +151,36 @@ function App() {
 
   const quoteCalc = useMemo(() => {
     const km = Number(quoteForm.estimatedKm || 0);
-    const rate = km > 300 ? kmPricing[quoteForm.vehicleType].over300 : kmPricing[quoteForm.vehicleType].normal;
-    const liters = km * fuelConsumption[quoteForm.vehicleType] / 100;
+    const vehicleType = quoteForm.vehicleType;
+    const rateConfig = kmPricing[vehicleType] || kmPricing["7 chỗ"];
+    const pricePerKm = km > 300 ? rateConfig.over300 : rateConfig.normal;
+
+    const fuelInfo = fuelConsumption[vehicleType] || fuelConsumption["7 chỗ"];
+    const liters = (km * fuelInfo.litersPer100Km) / 100;
     const fuelCost = liters * Number(quoteForm.fuelPrice || 0);
+
     const tollFee = Number(quoteForm.tollFee || 0);
     const desiredProfit = Number(quoteForm.desiredProfit || 0);
-    const kmPrice = km * rate;
-    const baseCost = fuelCost + tollFee;
-    const suggestedPrice = baseCost + desiredProfit;
-    return { rate, liters, fuelCost, tollFee, baseCost, kmPrice, suggestedPrice };
+
+    const costBase = fuelCost + tollFee;
+    const kmBasedPrice = km * pricePerKm;
+    const suggestedPrice = costBase + desiredProfit;
+    const finalSuggestedPrice = Math.max(kmBasedPrice, suggestedPrice);
+
+    return {
+      km,
+      fuelType: fuelInfo.fuelType,
+      litersPer100Km: fuelInfo.litersPer100Km,
+      liters,
+      fuelCost,
+      tollFee,
+      desiredProfit,
+      pricePerKm,
+      kmBasedPrice,
+      costBase,
+      suggestedPrice,
+      finalSuggestedPrice
+    };
   }, [quoteForm]);
 
   function saveTrip() {
@@ -176,26 +231,25 @@ function App() {
     });
   }
 
-  function handleRouteChange(index) {
-    const r = tollRoutes[index];
-    setQuoteForm({
-      ...quoteForm,
-      from: r.from,
-      to: r.to,
-      estimatedKm: r.km,
-      tollFee: r.tolls[quoteForm.vehicleType]
-    });
+  function handleQuoteRouteChange(routeId) {
+    const route = tollRoutes.find(r => r.id === Number(routeId)) || tollRoutes[0];
+    setQuoteForm(prev => ({
+      ...prev,
+      routeId: route.id,
+      from: route.from,
+      to: route.to,
+      estimatedKm: route.km,
+      tollFee: route.tolls[prev.vehicleType] || 0
+    }));
   }
 
-  function handleVehicleTypeChange(v) {
-    const route = tollRoutes.find(
-      r => r.from === quoteForm.from && r.to === quoteForm.to
-    );
-    setQuoteForm({
-      ...quoteForm,
-      vehicleType: v,
-      tollFee: route ? route.tolls[v] : quoteForm.tollFee
-    });
+  function handleQuoteVehicleChange(vehicleType) {
+    const route = tollRoutes.find(r => r.id === Number(quoteForm.routeId)) || tollRoutes[0];
+    setQuoteForm(prev => ({
+      ...prev,
+      vehicleType,
+      tollFee: route.tolls[vehicleType] || 0
+    }));
   }
 
   const card = "bg-white rounded-3xl border border-slate-200 shadow-sm p-4";
@@ -207,7 +261,7 @@ function App() {
         <div className="sticky top-0 z-10 bg-slate-100/95 backdrop-blur py-3">
           <div className="rounded-3xl bg-blue-700 text-white p-5 shadow-lg">
             <h1 className="text-2xl font-bold">SAM ANH</h1>
-            <p className="text-sm opacity-90 mt-2">Bản chạy ổn định để kiểm tra</p>
+            <p className="text-sm opacity-90 mt-2">Nâng cấp báo giá xe du lịch</p>
           </div>
         </div>
 
@@ -322,38 +376,121 @@ function App() {
             <div className={card}>
               <h2 className="text-lg font-bold mb-4">Báo giá xe du lịch</h2>
               <div className="space-y-3">
-                <select className={input} onChange={e => handleRouteChange(e.target.value)}>
-                  {tollRoutes.map((r, i) => (
-                    <option key={i} value={i}>{r.from} → {r.to}</option>
+                <select className={input} value={quoteForm.routeId} onChange={e => handleQuoteRouteChange(e.target.value)}>
+                  {tollRoutes.map(r => (
+                    <option key={r.id} value={r.id}>{r.from} → {r.to}</option>
                   ))}
                 </select>
-                <select className={input} value={quoteForm.vehicleType} onChange={e => handleVehicleTypeChange(e.target.value)}>
+
+                <select className={input} value={quoteForm.vehicleType} onChange={e => handleQuoteVehicleChange(e.target.value)}>
                   <option>7 chỗ</option>
                   <option>16 chỗ</option>
                   <option>29 chỗ</option>
                   <option>45 chỗ</option>
                 </select>
-                <input className={input} placeholder="KM ước tính" value={quoteForm.estimatedKm} onChange={e => setQuoteForm({ ...quoteForm, estimatedKm: e.target.value })} />
-                <input className={input} placeholder="Giá nhiên liệu hiện tại" value={quoteForm.fuelPrice} onChange={e => setQuoteForm({ ...quoteForm, fuelPrice: e.target.value })} />
-                <input className={input} placeholder="Lợi nhuận mong muốn" value={quoteForm.desiredProfit} onChange={e => setQuoteForm({ ...quoteForm, desiredProfit: e.target.value })} />
-                <input className={input} placeholder="Phí cầu đường" value={quoteForm.tollFee} onChange={e => setQuoteForm({ ...quoteForm, tollFee: e.target.value })} />
+
+                <input
+                  className={input}
+                  placeholder="KM ước tính"
+                  value={quoteForm.estimatedKm}
+                  onChange={e => setQuoteForm({ ...quoteForm, estimatedKm: e.target.value })}
+                />
+
+                <input
+                  className={input}
+                  placeholder="Giá nhiên liệu hiện tại"
+                  value={quoteForm.fuelPrice}
+                  onChange={e => setQuoteForm({ ...quoteForm, fuelPrice: e.target.value })}
+                />
+
+                <input
+                  className={input}
+                  placeholder="Lợi nhuận mong muốn"
+                  value={quoteForm.desiredProfit}
+                  onChange={e => setQuoteForm({ ...quoteForm, desiredProfit: e.target.value })}
+                />
+
+                <input
+                  className={input}
+                  placeholder="Phí cầu đường"
+                  value={quoteForm.tollFee}
+                  onChange={e => setQuoteForm({ ...quoteForm, tollFee: e.target.value })}
+                />
+
+                <textarea
+                  className={`${input} min-h-24`}
+                  placeholder="Ghi chú báo giá"
+                  value={quoteForm.note}
+                  onChange={e => setQuoteForm({ ...quoteForm, note: e.target.value })}
+                />
               </div>
             </div>
 
             <div className={card}>
               <div className="font-bold mb-3">Kết quả báo giá</div>
               <div className="space-y-2 text-sm">
-                <div className="flex items-center justify-between"><span>Tuyến</span><span className="font-semibold">{quoteForm.from} → {quoteForm.to}</span></div>
-                <div className="flex items-center justify-between"><span>Đơn giá/km</span><span className="font-semibold">{fmt(quoteCalc.rate)} đ</span></div>
-                <div className="flex items-center justify-between"><span>Số lít dự kiến</span><span className="font-semibold">{quoteCalc.liters.toFixed(1)} lít</span></div>
-                <div className="flex items-center justify-between"><span>Chi phí nhiên liệu</span><span className="font-semibold">{fmt(quoteCalc.fuelCost)} đ</span></div>
-                <div className="flex items-center justify-between"><span>Phí cầu đường</span><span className="font-semibold">{fmt(quoteCalc.tollFee)} đ</span></div>
-                <div className="flex items-center justify-between"><span>Chi phí cơ bản</span><span className="font-semibold">{fmt(quoteCalc.baseCost)} đ</span></div>
-                <div className="flex items-center justify-between"><span>Giá theo km</span><span className="font-semibold">{fmt(quoteCalc.kmPrice)} đ</span></div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Tuyến</span>
+                  <span className="font-semibold">{quoteForm.from} → {quoteForm.to}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">KM ước tính</span>
+                  <span className="font-semibold">{quoteCalc.km} km</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Đơn giá/km</span>
+                  <span className="font-semibold">{fmt(quoteCalc.pricePerKm)} đ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Nhiên liệu</span>
+                  <span className="font-semibold">{quoteCalc.fuelType}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Định mức</span>
+                  <span className="font-semibold">{quoteCalc.litersPer100Km}L / 100km</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Số lít dự kiến</span>
+                  <span className="font-semibold">{quoteCalc.liters.toFixed(1)} lít</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Chi phí nhiên liệu</span>
+                  <span className="font-semibold">{fmt(quoteCalc.fuelCost)} đ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Phí cầu đường</span>
+                  <span className="font-semibold">{fmt(quoteCalc.tollFee)} đ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Chi phí cơ bản</span>
+                  <span className="font-semibold">{fmt(quoteCalc.costBase)} đ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Giá theo km</span>
+                  <span className="font-semibold">{fmt(quoteCalc.kmBasedPrice)} đ</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Lợi nhuận mong muốn</span>
+                  <span className="font-semibold">{fmt(quoteCalc.desiredProfit)} đ</span>
+                </div>
                 <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
                   <span className="font-semibold">Giá báo tương đối</span>
-                  <span className="text-lg font-bold text-blue-700">{fmt(Math.max(quoteCalc.kmPrice, quoteCalc.suggestedPrice))} đ</span>
+                  <span className="text-lg font-bold text-blue-700">{fmt(quoteCalc.finalSuggestedPrice)} đ</span>
                 </div>
+              </div>
+            </div>
+
+            <div className={card}>
+              <div className="font-bold mb-3">Bảng cầu đường chuẩn</div>
+              <div className="space-y-2 text-sm">
+                {tollRoutes.map(r => (
+                  <div key={r.id} className="rounded-2xl bg-slate-50 p-3">
+                    <div className="font-semibold">{r.from} → {r.to}</div>
+                    <div className="text-slate-600">KM: {r.km}</div>
+                    <div className="text-slate-600">7 chỗ: {fmt(r.tolls["7 chỗ"])} đ • 16 chỗ: {fmt(r.tolls["16 chỗ"])} đ</div>
+                    <div className="text-slate-600">29 chỗ: {fmt(r.tolls["29 chỗ"])} đ • 45 chỗ: {fmt(r.tolls["45 chỗ"])} đ</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

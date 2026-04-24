@@ -39,6 +39,23 @@ const externalVehicles = [
   "Xe khác"
 ];
 
+const vedanAirportPrices = {
+  "4 chỗ": 900000,
+  "7 chỗ": 1000000,
+  "16 chỗ": 1700000
+};
+
+const vedanPackages = [
+  { maxKm: 50, maxHours: 4, prices: { "4 chỗ": 950000, "7 chỗ": 1100000, "16 chỗ": 1600000 } },
+  { maxKm: 100, maxHours: 8, prices: { "4 chỗ": 1400000, "7 chỗ": 1550000, "16 chỗ": 2300000 } },
+  { maxKm: 125, maxHours: 10, prices: { "4 chỗ": 1587500, "7 chỗ": 1737500, "16 chỗ": 2600000 } },
+  { maxKm: 150, maxHours: 12, prices: { "4 chỗ": 1775000, "7 chỗ": 1925000, "16 chỗ": 2850000 } },
+  { maxKm: 200, maxHours: 14, prices: { "4 chỗ": 2150000, "7 chỗ": 2300000, "16 chỗ": 3350000 } }
+];
+
+const vedanOverKm = { "4 chỗ": 7500, "7 chỗ": 7500, "16 chỗ": 10000 };
+const vedanOverHour = { "4 chỗ": 60000, "7 chỗ": 60000, "16 chỗ": 100000 };
+
 const tollRoutes = [
   { from: "TP.HCM", to: "Vũng Tàu", km: 200, tolls: { "7 chỗ": 250000, "16 chỗ": 350000, "29 chỗ": 500000, "45 chỗ": 800000 } },
   { from: "Bệnh viện Biên Hòa", to: "Nha Trang", km: 420, tolls: { "7 chỗ": 900000, "16 chỗ": 1200000, "29 chỗ": 1500000, "45 chỗ": 2200000 } },
@@ -62,21 +79,39 @@ const kmPrice = {
   "45 chỗ": { normal: 35000, long: 31500 }
 };
 
+function calcVedan(group, km, hours) {
+  const k = Number(km || 0);
+  const h = Number(hours || 0);
+  const pkg = vedanPackages.find(p => k <= p.maxKm && h <= p.maxHours) || vedanPackages[vedanPackages.length - 1];
+  const base = pkg.prices[group] || 0;
+  const extraKm = Math.max(0, k - pkg.maxKm);
+  const extraHour = Math.max(0, h - pkg.maxHours);
+  const kmFee = extraKm * (vedanOverKm[group] || 0);
+  const hourFee = extraHour > 0 ? (vedanOverHour[group] || 0) : 0;
+  return {
+    packageText: `≤${pkg.maxKm}km / ≤${pkg.maxHours}h`,
+    base,
+    kmFee,
+    hourFee,
+    total: base + kmFee + hourFee
+  };
+}
+
 function App() {
   const [tab, setTab] = useState("dashboard");
 
   const [trips, setTrips] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("samAnhTripsFinal")) || []; }
+    try { return JSON.parse(localStorage.getItem("samAnhTripsVedanFixed")) || []; }
     catch { return []; }
   });
 
   const [tourTrips, setTourTrips] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("samAnhTourFinal")) || []; }
+    try { return JSON.parse(localStorage.getItem("samAnhTourVedanFixed")) || []; }
     catch { return []; }
   });
 
-  useEffect(() => localStorage.setItem("samAnhTripsFinal", JSON.stringify(trips)), [trips]);
-  useEffect(() => localStorage.setItem("samAnhTourFinal", JSON.stringify(tourTrips)), [tourTrips]);
+  useEffect(() => localStorage.setItem("samAnhTripsVedanFixed", JSON.stringify(trips)), [trips]);
+  useEffect(() => localStorage.setItem("samAnhTourVedanFixed", JSON.stringify(tourTrips)), [tourTrips]);
 
   const [tripForm, setTripForm] = useState({
     date: new Date().toISOString().slice(0, 10),
@@ -88,7 +123,11 @@ function App() {
     officialFare: olympusRoutes[0].officialFare,
     commercialFare: olympusRoutes[0].commercialFare,
     tollCost: "",
-    otherCost: ""
+    otherCost: "",
+    vedanType: "airport",
+    vedanGroup: "7 chỗ",
+    km: "",
+    hours: ""
   });
 
   const [tourForm, setTourForm] = useState({
@@ -113,16 +152,7 @@ function App() {
     profit: ""
   });
 
-  function profitTrip(t) {
-    if (t.tripType === "external") return Number(t.officialFare || 0) - Number(t.commercialFare || 0);
-    return Number(t.officialFare || 0) - Number(t.tollCost || 0) - Number(t.otherCost || 0);
-  }
-
-  const dashboard = useMemo(() => {
-    const revenue = trips.reduce((s, t) => s + Number(t.officialFare || 0), 0);
-    const profit = trips.reduce((s, t) => s + profitTrip(t), 0);
-    return { revenue, profit, count: trips.length };
-  }, [trips]);
+  const vedanResult = useMemo(() => calcVedan(tripForm.vedanGroup, tripForm.km, tripForm.hours), [tripForm.vedanGroup, tripForm.km, tripForm.hours]);
 
   const quoteCalc = useMemo(() => {
     const km = Number(quote.km || 0);
@@ -136,6 +166,70 @@ function App() {
     const costTotal = fuelCost + toll + profit;
     return { rate, liters, fuelCost, toll, kmTotal, costTotal, finalPrice: Math.max(kmTotal, costTotal) };
   }, [quote]);
+
+  function profitTrip(t) {
+    if (t.tripType === "external") return Number(t.officialFare || 0) - Number(t.commercialFare || 0);
+    return Number(t.officialFare || 0) - Number(t.tollCost || 0) - Number(t.otherCost || 0);
+  }
+
+  const dashboard = useMemo(() => {
+    const revenue = trips.reduce((s, t) => s + Number(t.officialFare || 0), 0);
+    const profit = trips.reduce((s, t) => s + profitTrip(t), 0);
+    return { revenue, profit, count: trips.length };
+  }, [trips]);
+
+  function updateCustomer(customer) {
+    const next = { ...tripForm, customer };
+    if (customer === "OLYMPUS") {
+      next.routeType = "preset";
+      next.route = olympusRoutes[0].route;
+      next.officialFare = olympusRoutes[0].officialFare;
+      next.commercialFare = olympusRoutes[0].commercialFare;
+    }
+    if (customer === "Vedan") {
+      next.vedanType = "airport";
+      next.vedanGroup = "7 chỗ";
+      next.route = "Đưa đón sân bay";
+      next.officialFare = vedanAirportPrices["7 chỗ"];
+      next.commercialFare = "";
+      next.km = "";
+      next.hours = "";
+    }
+    if (customer === "Khách khác") {
+      next.route = "";
+      next.officialFare = "";
+      next.commercialFare = "";
+    }
+    setTripForm(next);
+  }
+
+  function updateVedanType(type) {
+    const next = { ...tripForm, vedanType: type };
+    if (type === "airport") {
+      next.route = "Đưa đón sân bay";
+      next.officialFare = vedanAirportPrices[next.vedanGroup];
+    } else {
+      next.route = "";
+      next.officialFare = calcVedan(next.vedanGroup, next.km, next.hours).total;
+    }
+    setTripForm(next);
+  }
+
+  function updateVedanGroup(group) {
+    const next = { ...tripForm, vedanGroup: group };
+    if (next.vedanType === "airport") {
+      next.officialFare = vedanAirportPrices[group];
+    } else {
+      next.officialFare = calcVedan(group, next.km, next.hours).total;
+    }
+    setTripForm(next);
+  }
+
+  function updateVedanField(field, value) {
+    const next = { ...tripForm, [field]: value };
+    next.officialFare = calcVedan(next.vedanGroup, next.km, next.hours).total;
+    setTripForm(next);
+  }
 
   function saveTrip() {
     setTrips([{ ...tripForm, id: Date.now() }, ...trips]);
@@ -188,12 +282,18 @@ function App() {
               <h2 className="text-lg font-bold mb-4">Nhập chuyến xe</h2>
               <div className="space-y-3">
                 <input className={input} type="date" value={tripForm.date} onChange={e => setTripForm({ ...tripForm, date: e.target.value })} />
-                <select className={input} value={tripForm.customer} onChange={e => setTripForm({ ...tripForm, customer: e.target.value })}>
-                  <option>OLYMPUS</option><option>Vedan</option><option>Khách khác</option>
+
+                <select className={input} value={tripForm.customer} onChange={e => updateCustomer(e.target.value)}>
+                  <option>OLYMPUS</option>
+                  <option>Vedan</option>
+                  <option>Khách khác</option>
                 </select>
+
                 <select className={input} value={tripForm.tripType} onChange={e => setTripForm({ ...tripForm, tripType: e.target.value, vehicle: e.target.value === "company" ? companyVehicles[0] : externalVehicles[0] })}>
-                  <option value="company">Xe công ty</option><option value="external">Xe thuê ngoài</option>
+                  <option value="company">Xe công ty</option>
+                  <option value="external">Xe thuê ngoài</option>
                 </select>
+
                 <select className={input} value={tripForm.vehicle} onChange={e => setTripForm({ ...tripForm, vehicle: e.target.value })}>
                   {(tripForm.tripType === "company" ? companyVehicles : externalVehicles).map(v => <option key={v}>{v}</option>)}
                 </select>
@@ -201,7 +301,8 @@ function App() {
                 {tripForm.customer === "OLYMPUS" && (
                   <>
                     <select className={input} value={tripForm.routeType} onChange={e => setTripForm({ ...tripForm, routeType: e.target.value })}>
-                      <option value="preset">Tuyến có sẵn</option><option value="custom">Tuyến phát sinh</option>
+                      <option value="preset">Tuyến có sẵn</option>
+                      <option value="custom">Tuyến phát sinh</option>
                     </select>
                     {tripForm.routeType === "preset" ? (
                       <select className={input} onChange={e => setOlympusRoute(e.target.value)}>
@@ -213,11 +314,50 @@ function App() {
                   </>
                 )}
 
-                {tripForm.customer !== "OLYMPUS" && (
+                {tripForm.customer === "Vedan" && (
+                  <>
+                    <select className={input} value={tripForm.vedanType} onChange={e => updateVedanType(e.target.value)}>
+                      <option value="airport">Đưa đón sân bay</option>
+                      <option value="flexible">Chuyến thường linh hoạt</option>
+                    </select>
+
+                    <select className={input} value={tripForm.vedanGroup} onChange={e => updateVedanGroup(e.target.value)}>
+                      <option value="4 chỗ">Yêu cầu khách hàng: 4 chỗ</option>
+                      <option value="7 chỗ">Yêu cầu khách hàng: 7 chỗ</option>
+                      <option value="16 chỗ">Yêu cầu khách hàng: 16 chỗ</option>
+                    </select>
+
+                    {tripForm.vedanType === "flexible" && (
+                      <>
+                        <input className={input} placeholder="Điểm đi" value={tripForm.pickup || ""} onChange={e => setTripForm({ ...tripForm, pickup: e.target.value })} />
+                        <input className={input} placeholder="Điểm đến" value={tripForm.dropoff || ""} onChange={e => setTripForm({ ...tripForm, dropoff: e.target.value })} />
+                        <input className={input} inputMode="numeric" placeholder="Số KM thực tế" value={tripForm.km} onChange={e => updateVedanField("km", e.target.value)} />
+                        <input className={input} inputMode="numeric" placeholder="Số giờ thực tế" value={tripForm.hours} onChange={e => updateVedanField("hours", e.target.value)} />
+
+                        <div className="rounded-2xl bg-blue-50 p-4 text-sm space-y-1">
+                          <div>Gói áp dụng: <b>{vedanResult.packageText}</b></div>
+                          <div>Giá cơ bản: <b>{fmt(vedanResult.base)} đ</b></div>
+                          <div>Phụ thu km: <b>{fmt(vedanResult.kmFee)} đ</b></div>
+                          <div>Phụ thu giờ: <b>{fmt(vedanResult.hourFee)} đ</b></div>
+                          <div className="text-blue-700 font-bold">Tổng giá Vedan: {fmt(vedanResult.total)} đ</div>
+                        </div>
+                      </>
+                    )}
+
+                    {tripForm.vedanType === "airport" && (
+                      <div className="rounded-2xl bg-blue-50 p-3 text-sm text-blue-800">
+                        Giá sân bay áp theo yêu cầu khách hàng: <b>{fmt(tripForm.officialFare)} đ</b>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {tripForm.customer === "Khách khác" && (
                   <input className={input} placeholder="Tên tuyến / chuyến" value={tripForm.route} onChange={e => setTripForm({ ...tripForm, route: e.target.value })} />
                 )}
 
                 <input className={input} inputMode="numeric" placeholder="Giá cước chính" value={tripForm.officialFare} onChange={e => setTripForm({ ...tripForm, officialFare: e.target.value })} />
+
                 {tripForm.tripType === "external" ? (
                   <input className={input} inputMode="numeric" placeholder="Giá thuê ngoài" value={tripForm.commercialFare} onChange={e => setTripForm({ ...tripForm, commercialFare: e.target.value })} />
                 ) : (
@@ -226,6 +366,7 @@ function App() {
                     <input className={input} inputMode="numeric" placeholder="Chi phí khác" value={tripForm.otherCost} onChange={e => setTripForm({ ...tripForm, otherCost: e.target.value })} />
                   </>
                 )}
+
                 <button onClick={saveTrip} className="w-full rounded-2xl bg-blue-700 text-white font-semibold py-3">Lưu chuyến</button>
               </div>
             </div>
@@ -237,7 +378,7 @@ function App() {
             {trips.map(t => (
               <div className={card} key={t.id}>
                 <div className="font-bold">{t.customer}</div>
-                <div className="text-sm">{t.route}</div>
+                <div className="text-sm">{t.customer === "Vedan" && t.vedanType === "flexible" ? `${t.pickup || ""} → ${t.dropoff || ""}` : t.route}</div>
                 <div className="text-sm text-slate-600">{t.vehicle}</div>
                 <div>Giá: {fmt(t.officialFare)} đ</div>
                 <div className={profitTrip(t) >= 0 ? "text-emerald-600 font-bold" : "text-red-600 font-bold"}>Lãi: {fmt(profitTrip(t))} đ</div>
@@ -266,6 +407,7 @@ function App() {
                 <button onClick={saveTour} className="w-full rounded-2xl bg-emerald-600 text-white font-semibold py-3">Lưu xe du lịch</button>
               </div>
             </div>
+
             {tourTrips.map(t => (
               <div className={card} key={t.id}>
                 <div className="font-bold">{t.date} • {t.vehicleType} • {t.vehicleCount} xe</div>

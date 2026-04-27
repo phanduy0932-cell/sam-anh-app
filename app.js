@@ -2,7 +2,7 @@ const { useState, useMemo, useEffect } = React;
 
 const STORAGE_TRIPS = "sam_anh_final_trips_v1";
 const STORAGE_TOURS = "sam_anh_final_tours_v1";
-
+const STORAGE_COSTS = "sam_anh_vehicle_costs_v1";
 function fmt(value) {
   return Number(value || 0).toLocaleString("vi-VN");
 }
@@ -117,6 +117,26 @@ function calcVedanFare(group, kmValue, hourValue) {
 function calcTripProfit(trip) {
   if (trip.tripType === "external") return Number(trip.officialFare || 0) - Number(trip.commercialFare || 0);
   return Number(trip.officialFare || 0) - Number(trip.tollCost || 0) - Number(trip.otherCost || 0);
+}function calcVehicleCost(cost) {
+  return (
+    Number(cost.fuelCost || 0) +
+    Number(cost.driverSalary || 0) +
+    Number(cost.maintenanceCost || 0) +
+    Number(cost.tollCost || 0) +
+    Number(cost.otherCost || 0)
+  );
+}
+
+function makeInitialCostForm() {
+  return {
+    month: new Date().toISOString().slice(0, 7),
+    vehicle: "",
+    fuelCost: "",
+    driverSalary: "",
+    maintenanceCost: "",
+    tollCost: "",
+    otherCost: ""
+  };
 }
 function calcTripCost(trip) {
   if (trip.tripType === "external") return Number(trip.commercialFare || 0);
@@ -136,6 +156,8 @@ function App() {
   const [tab, setTab] = useState("dashboard");
   const [trips, setTrips] = useState([]);
   const [tourTrips, setTourTrips] = useState([]);
+  const [vehicleCosts, setVehicleCosts] = useState([]);
+  const [costForm, setCostForm] = useState(makeInitialCostForm());
   const [tripForm, setTripForm] = useState(makeInitialTripForm());
   const [tourForm, setTourForm] = useState(makeInitialTourForm());
   const [quoteForm, setQuoteForm] = useState(makeInitialQuoteForm());

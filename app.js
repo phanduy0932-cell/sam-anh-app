@@ -167,8 +167,10 @@ function App() {
     try {
       const savedTrips = localStorage.getItem(STORAGE_TRIPS);
       const savedTours = localStorage.getItem(STORAGE_TOURS);
+      const savedCosts = localStorage.getItem(STORAGE_COSTS);
       if (savedTrips) setTrips(JSON.parse(savedTrips));
       if (savedTours) setTourTrips(JSON.parse(savedTours));
+      if (savedCosts) setVehicleCosts(JSON.parse(savedCosts));
     } catch (err) { console.log("Không đọc được dữ liệu đã lưu", err); }
   }, []);
   useEffect(() => { localStorage.setItem(STORAGE_TRIPS, JSON.stringify(trips)); }, [trips]);

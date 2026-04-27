@@ -321,7 +321,7 @@ function deleteVehicleCost(id) {
   }
 
   const card = "bg-white rounded-3xl border border-slate-200 shadow-sm p-4";
-  const input = "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base outline-none focus:ring-2 focus:ring-blue-500";
+  const input = "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base outline-none focus:ring-2 focus:ring-blue-500"
   const label = "text-sm font-semibold text-slate-600 mb-1";
   const mainButton = "w-full rounded-2xl bg-blue-700 text-white font-semibold py-3 active:scale-[0.99]";
 

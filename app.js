@@ -554,13 +554,8 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   );
 }
 function ReportTab({ card, reports }) {
- ) {
   return (
-    <div className="mt-4 space-y-4">
-      <div className={card}>
-        <h2 className="text-xl font-bold mb-4">Chi phí xe</h2>
-
-        <div className="space-y-3">
+    <div className="space-y-3">
           <div>
             <div className={label}>Tháng</div>
             <input

@@ -130,6 +130,7 @@ function calcTripProfit(trip) {
 function makeInitialCostForm() {
   return {
     month: new Date().toISOString().slice(0, 7),
+    date: todayStr(),
     vehicle: "",
     fuelCost: "",
     driverSalary: "",
@@ -417,6 +418,15 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
         <div className="space-y-3">
           <div>
             <div className={label}>Tháng</div>
+    <div>
+  <div className={label}>Ngày chi phí</div>
+  <input
+    className={input}
+    type="date"
+    value={costForm.date}
+    onChange={e => setCostForm({ ...costForm, date: e.target.value })}
+  />
+</div>
             <input
               className={input}
               type="month"
@@ -505,7 +515,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
       {vehicleCosts.map(c => (
         <div key={c.id} className={card}>
           <div className="font-bold">{c.vehicle || "Chưa nhập xe"}</div>
-          <div className="text-sm text-slate-500">{c.month}</div>
+         <div className="text-sm text-slate-500">{c.date || c.month}</div>
           <div className="mt-2 font-bold text-blue-700">
             Tổng: {fmt(calcVehicleCost(c))} đ
           </div>

@@ -415,16 +415,16 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
       <div className={card}>
         <h2 className="text-xl font-bold mb-4">Chi phí xe</h2>
 
-        <div className="space-y-3">
-        
-  <div className={label}>Ngày chi phí</div>
-  <input
-    className={input}
-    type="date"
-    value={costForm.date}
-    onChange={e => setCostForm({ ...costForm, date: e.target.value })}
-  />
-</div>
+ <div className="space-y-3">
+  <div>
+    <div className={label}>Ngày chi phí</div>
+    <input
+      className={input}
+      type="date"
+      value={costForm.date}
+      onChange={e => setCostForm({ ...costForm, date: e.target.value })}
+    />
+  </div>
 
           <div>
             <div className={label}>Biển số xe</div>

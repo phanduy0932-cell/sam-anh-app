@@ -138,6 +138,26 @@ function makeInitialCostForm() {
     otherCost: ""
   };
 }
+function calcVehicleCost(cost) {
+  return (
+    Number(cost.fuelCost || 0) +
+    Number(cost.driverSalary || 0) +
+    Number(cost.maintenanceCost || 0) +
+    Number(cost.tollCost || 0) +
+    Number(cost.otherCost || 0)
+  );
+}
+function makeInitialCostForm() {
+  return {
+    month: new Date().toISOString().slice(0, 7),
+    vehicle: "",
+    fuelCost: "",
+    driverSalary: "",
+    maintenanceCost: "",
+    tollCost: "",
+    otherCost: ""
+  };
+}
 function calcTripCost(trip) {
   if (trip.tripType === "external") return Number(trip.commercialFare || 0);
   return Number(trip.tollCost || 0) + Number(trip.otherCost || 0);

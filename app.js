@@ -302,7 +302,24 @@ function saveVehicleCost() {
 function deleteVehicleCost(id) {
   setVehicleCosts(vehicleCosts.filter(c => c.id !== id));
 }
-  
+  function saveTrip() {
+  const customer = customers.find(c => c.id === tripForm.customerId) || customers[0];
+  const vehicle = getVehicle(tripForm.vehicleId, tripForm.tripType);
+
+  setTrips(prev => [
+    {
+      ...tripForm,
+      id: Date.now(),
+      customerName: customer.name,
+      vehicleLabel: vehicle.label,
+      actualType: vehicle.actualType
+    },
+    ...prev
+  ]);
+
+  setTripForm(makeInitialTripForm());
+  setTab("trips");
+}
   function deleteTrip(id) { setTrips(prev => prev.filter(t => t.id !== id)); }
   function saveTourTrip() { setTourTrips(prev => [{ ...tourForm, id: Date.now(), price: Number(tourForm.price || 0) }, ...prev]); setTourForm(makeInitialTourForm()); }
   function deleteTour(id) { setTourTrips(prev => prev.filter(t => t.id !== id)); }

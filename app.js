@@ -416,9 +416,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
         <h2 className="text-xl font-bold mb-4">Chi phí xe</h2>
 
         <div className="space-y-3">
-          <div>
-            <div className={label}>Tháng</div>
-    <div>
+        
   <div className={label}>Ngày chi phí</div>
   <input
     className={input}

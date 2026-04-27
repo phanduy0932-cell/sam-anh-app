@@ -387,7 +387,7 @@ function deleteVehicleCost(id) {
     card={card}
     input={input}
     label={label}
-    vehicles={vehicles}
+    vehicles={companyVehicles}
     mainButton={mainButton}
     costForm={costForm}
     setCostForm={setCostForm}

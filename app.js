@@ -175,6 +175,9 @@ function App() {
   }, []);
   useEffect(() => { localStorage.setItem(STORAGE_TRIPS, JSON.stringify(trips)); }, [trips]);
   useEffect(() => { localStorage.setItem(STORAGE_TOURS, JSON.stringify(tourTrips)); }, [tourTrips]);
+  useEffect(() => {
+  localStorage.setItem(STORAGE_COSTS, JSON.stringify(vehicleCosts));
+}, [vehicleCosts]);
 
   const currentCustomer = customers.find(c => c.id === tripForm.customerId) || customers[0];
   const currentVehicle = getVehicle(tripForm.vehicleId, tripForm.tripType);

@@ -370,7 +370,20 @@ function deleteVehicleCost(id) {
         {tab === "trips" && <TripList trips={trips} card={card} onDelete={deleteTrip} />}
         {tab === "tour" && <TourTab card={card} input={input} label={label} mainButton={mainButton} tourForm={tourForm} setTourForm={setTourForm} tourTrips={tourTrips} saveTourTrip={saveTourTrip} deleteTour={deleteTour} />}
         {tab === "quote" && <QuoteTab card={card} input={input} label={label} quoteForm={quoteForm} setQuoteForm={setQuoteForm} updateQuoteRoute={updateQuoteRoute} updateQuoteVehicle={updateQuoteVehicle} quoteRoute={quoteRoute} quoteCalc={quoteCalc} />}
-        {tab === "report" && <ReportTab card={card} reports={reports} />}
+       {tab === "costs" && (
+  <CostTab
+    card={card}
+    input={input}
+    label={label}
+    mainButton={mainButton}
+    costForm={costForm}
+    setCostForm={setCostForm}
+    vehicleCosts={vehicleCosts}
+    saveVehicleCost={saveVehicleCost}
+    deleteVehicleCost={deleteVehicleCost}
+  />
+)}
+             {tab === "report" && <ReportTab card={card} reports={reports} />}
 
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200"><div className="max-w-md mx-auto grid grid-cols-6 gap-1 px-2 py-2 text-center text-[11px] font-semibold text-slate-600">
           {[ ["dashboard","Tổng quan"], ["entry","Nhập"], ["trips","Chuyến"], ["tour","Xe DL"], ["quote","Báo giá"],["costs","Chi phí"],["report","Báo cáo"] ].map(([key, text]) => <button key={key} onClick={() => setTab(key)} className={`rounded-2xl py-3 ${tab === key ? "bg-blue-700 text-white" : "bg-slate-100"}`}>{text}</button>)}

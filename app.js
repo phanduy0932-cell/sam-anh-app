@@ -414,6 +414,144 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   vehicleCosts,
   saveVehicleCost,
   deleteVehicleCost
+}) {
+  return (
+    <div className="mt-4 space-y-4">
+      <div className={card}>
+        <h2 className="text-xl font-bold mb-4">Chi phí xe</h2>
+
+        <div className="space-y-3">
+          <div>
+            <div className={label}>Tháng</div>
+            <input
+              className={input}
+              type="month"
+              value={costForm.month}
+              onChange={(e) =>
+                setCostForm({ ...costForm, month: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Biển số / tên xe</div>
+            <input
+              className={input}
+              value={costForm.vehicle}
+              onChange={(e) =>
+                setCostForm({ ...costForm, vehicle: e.target.value })
+              }
+              placeholder="Ví dụ: 60K642.57"
+            />
+          </div>
+
+          <div>
+            <div className={label}>Đổ xăng / dầu</div>
+            <input
+              className={input}
+              inputMode="numeric"
+              value={costForm.fuelCost}
+              onChange={(e) =>
+                setCostForm({ ...costForm, fuelCost: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Lương lái xe</div>
+            <input
+              className={input}
+              inputMode="numeric"
+              value={costForm.driverSalary}
+              onChange={(e) =>
+                setCostForm({ ...costForm, driverSalary: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Bảo dưỡng / sửa chữa</div>
+            <input
+              className={input}
+              inputMode="numeric"
+              value={costForm.maintenanceCost}
+              onChange={(e) =>
+                setCostForm({ ...costForm, maintenanceCost: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Cầu đường</div>
+            <input
+              className={input}
+              inputMode="numeric"
+              value={costForm.tollCost}
+              onChange={(e) =>
+                setCostForm({ ...costForm, tollCost: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Chi phí khác</div>
+            <input
+              className={input}
+              inputMode="numeric"
+              value={costForm.otherCost}
+              onChange={(e) =>
+                setCostForm({ ...costForm, otherCost: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <div className="text-sm text-slate-500">Tổng chi phí tạm tính</div>
+            <div className="text-xl font-bold text-blue-700">
+              {fmt(calcVehicleCost(costForm))} đ
+            </div>
+          </div>
+
+          <button className={mainButton} onClick={saveVehicleCost}>
+            Lưu chi phí
+          </button>
+        </div>
+      </div>
+
+      {vehicleCosts.length === 0 && (
+        <div className={card}>Chưa có chi phí xe nào.</div>
+      )}
+
+      {vehicleCosts.map((c) => (
+        <div key={c.id} className={card}>
+          <div className="flex justify-between gap-3">
+            <div>
+              <div className="font-bold">{c.vehicle || "Chưa nhập xe"}</div>
+              <div className="text-sm text-slate-500">{c.month}</div>
+            </div>
+            <button
+              className="text-red-600 font-semibold"
+              onClick={() => deleteVehicleCost(c.id)}
+            >
+              Xóa
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
+            <div>Nhiên liệu: <b>{fmt(c.fuelCost)} đ</b></div>
+            <div>Lương: <b>{fmt(c.driverSalary)} đ</b></div>
+            <div>Bảo dưỡng: <b>{fmt(c.maintenanceCost)} đ</b></div>
+            <div>Cầu đường: <b>{fmt(c.tollCost)} đ</b></div>
+            <div>Khác: <b>{fmt(c.otherCost)} đ</b></div>
+          </div>
+
+          <div className="mt-3 font-bold text-blue-700">
+            Tổng: {fmt(calcVehicleCost(c))} đ
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 function ReportTab({ card, reports }) {
  ) {

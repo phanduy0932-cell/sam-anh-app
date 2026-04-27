@@ -301,13 +301,6 @@ function saveVehicleCost() {
 function deleteVehicleCost(id) {
   setVehicleCosts(vehicleCosts.filter(c => c.id !== id));
 }
-    function saveVehicleCost() {
-  setVehicleCosts([
-    { ...costForm, id: Date.now() },
-    ...vehicleCosts
-  ]);
-  setCostForm(makeInitialCostForm());
-}
 
 function deleteVehicleCost(id) {
   setVehicleCosts(vehicleCosts.filter(c => c.id !== id));

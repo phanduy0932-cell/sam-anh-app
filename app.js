@@ -387,6 +387,7 @@ function deleteVehicleCost(id) {
     card={card}
     input={input}
     label={label}
+    vehicles={vehicles}
     mainButton={mainButton}
     costForm={costForm}
     setCostForm={setCostForm}
@@ -420,6 +421,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   card,
   input,
   label,
+  vehicles,
   mainButton,
   costForm,
   setCostForm,
@@ -445,12 +447,19 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
 
           <div>
             <div className={label}>Biển số xe</div>
-            <input
-              className={input}
-              value={costForm.vehicle}
-              placeholder="Ví dụ: 60K642.57"
-              onChange={e => setCostForm({ ...costForm, vehicle: e.target.value })}
-            />
+            <select
+  className={input}
+  value={costForm.vehicle}
+  onChange={e => setCostForm({ ...costForm, vehicle: e.target.value })}
+>
+  <option value="">Chọn xe</option>
+
+  {vehicles.map(v => (
+    <option key={v.id} value={v.label}>
+      {v.label}
+    </option>
+  ))}
+</select>
           </div>
 
           <div>

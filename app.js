@@ -159,8 +159,6 @@ function App() {
   const [tourTrips, setTourTrips] = useState([]);
   const [vehicleCosts, setVehicleCosts] = useState([]);
   const [costForm, setCostForm] = useState(makeInitialCostForm());
-  const [vehicleCosts, setVehicleCosts] = useState([]);
-  const [costForm, setCostForm] = useState(makeInitialCostForm());
   const [tripForm, setTripForm] = useState(makeInitialTripForm());
   const [tourForm, setTourForm] = useState(makeInitialTourForm());
   const [quoteForm, setQuoteForm] = useState(makeInitialQuoteForm());

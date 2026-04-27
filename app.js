@@ -404,9 +404,7 @@ function TourTab({ card, input, label, mainButton, tourForm, setTourForm, tourTr
 function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRoute, updateQuoteVehicle, quoteRoute, quoteCalc }) {
   return <div className="mt-4 space-y-4"><div className={card}><h2 className="text-xl font-bold mb-4">Báo giá xe du lịch</h2><div className="space-y-3"><div><div className={label}>Tuyến</div><select className={input} value={quoteForm.routeId} onChange={e => updateQuoteRoute(e.target.value)}>{tollRoutes.map(r => <option key={r.id} value={r.id}>{r.from} → {r.to}</option>)}</select></div><div><div className={label}>Loại xe</div><select className={input} value={quoteForm.vehicleType} onChange={e => updateQuoteVehicle(e.target.value)}>{["7 chỗ","16 chỗ","29 chỗ","45 chỗ"].map(v => <option key={v}>{v}</option>)}</select></div><div><div className={label}>KM ước tính</div><input className={input} inputMode="numeric" value={quoteForm.estimatedKm} onChange={e => setQuoteForm({...quoteForm, estimatedKm: e.target.value})} /></div><div><div className={label}>Phí cầu đường</div><input className={input} inputMode="numeric" value={quoteForm.tollFee} onChange={e => setQuoteForm({...quoteForm, tollFee: e.target.value})} /></div><div><div className={label}>Giá nhiên liệu hiện tại</div><input className={input} inputMode="numeric" value={quoteForm.fuelPrice} onChange={e => setQuoteForm({...quoteForm, fuelPrice: e.target.value})} /></div><div><div className={label}>Lợi nhuận mong muốn</div><input className={input} inputMode="numeric" value={quoteForm.desiredProfit} onChange={e => setQuoteForm({...quoteForm, desiredProfit: e.target.value})} /></div></div></div><div className={card}><div className="font-bold mb-3">Kết quả báo giá</div><div className="space-y-2 text-sm"><div className="flex justify-between"><span>Tuyến</span><b>{quoteRoute.from} → {quoteRoute.to}</b></div><div className="flex justify-between"><span>Đơn giá/km</span><b>{fmt(quoteCalc.pricePerKm)} đ</b></div><div className="flex justify-between"><span>Nhiên liệu</span><b>{quoteCalc.fuelType}</b></div><div className="flex justify-between"><span>Định mức</span><b>{quoteCalc.litersPer100Km}L / 100km</b></div><div className="flex justify-between"><span>Số lít</span><b>{quoteCalc.liters.toFixed(1)} lít</b></div><div className="flex justify-between"><span>Chi phí nhiên liệu</span><b>{fmt(quoteCalc.fuelCost)} đ</b></div><div className="flex justify-between"><span>Cầu đường</span><b>{fmt(quoteCalc.tollFee)} đ</b></div><div className="flex justify-between"><span>Chi phí cơ bản</span><b>{fmt(quoteCalc.basicCost)} đ</b></div><div className="flex justify-between"><span>Giá theo km</span><b>{fmt(quoteCalc.kmBasedPrice)} đ</b></div><div className="pt-2 border-t flex justify-between"><span className="font-bold">Giá báo tương đối</span><b className="text-blue-700 text-lg">{fmt(quoteCalc.finalPrice)} đ</b></div></div></div><div className={card}><div className="font-bold mb-3">Bảng cầu đường chuẩn</div><div className="space-y-2 text-sm">{tollRoutes.map(r => <div key={r.id} className="rounded-2xl bg-slate-50 p-3"><div className="font-semibold">{r.from} → {r.to}</div><div>KM: {r.km}</div><div>7 chỗ: {fmt(r.tolls["7 chỗ"])} • 16 chỗ: {fmt(r.tolls["16 chỗ"])}</div><div>29 chỗ: {fmt(r.tolls["29 chỗ"])} • 45 chỗ: {fmt(r.tolls["45 chỗ"])}</div></div>)}</div></div></div>;
 }
-
-function ReportTab({ card, reports }) {
-  function CostTab({
+ function CostTab({
   card,
   input,
   label,
@@ -416,7 +414,9 @@ function ReportTab({ card, reports }) {
   vehicleCosts,
   saveVehicleCost,
   deleteVehicleCost
-}) {
+}
+function ReportTab({ card, reports }) {
+ ) {
   return (
     <div className="mt-4 space-y-4">
       <div className={card}>

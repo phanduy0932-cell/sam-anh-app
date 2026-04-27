@@ -302,6 +302,17 @@ function App() {
 function deleteVehicleCost(id) {
   setVehicleCosts(vehicleCosts.filter(c => c.id !== id));
 }
+    function saveVehicleCost() {
+  setVehicleCosts([
+    { ...costForm, id: Date.now() },
+    ...vehicleCosts
+  ]);
+  setCostForm(makeInitialCostForm());
+}
+
+function deleteVehicleCost(id) {
+  setVehicleCosts(vehicleCosts.filter(c => c.id !== id));
+}
     const customer = customers.find(c => c.id === tripForm.customerId) || customers[0];
     const vehicle = getVehicle(tripForm.vehicleId, tripForm.tripType);
     setTrips(prev => [{ ...tripForm, id: Date.now(), customerName: customer.name, vehicleLabel: vehicle.label, actualType: vehicle.actualType, pricingGroup: vehicle.pricingGroup, officialFare: Number(tripForm.officialFare || 0), commercialFare: Number(tripForm.commercialFare || 0), tollCost: Number(tripForm.tollCost || 0), otherCost: Number(tripForm.otherCost || 0), distanceKm: Number(tripForm.distanceKm || 0), durationHours: Number(tripForm.durationHours || 0) }, ...prev]);

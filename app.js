@@ -427,13 +427,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
     onChange={e => setCostForm({ ...costForm, date: e.target.value })}
   />
 </div>
-            <input
-              className={input}
-              type="month"
-              value={costForm.month}
-              onChange={e => setCostForm({ ...costForm, month: e.target.value })}
-            />
-          </div>
 
           <div>
             <div className={label}>Biển số xe</div>

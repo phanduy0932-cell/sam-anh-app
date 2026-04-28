@@ -487,6 +487,21 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   deleteVehicleCost,
   vehicles = [],
 }) {
+   const saveVehicleCost = () => {
+  const vehicle = vehicles.find(v => String(v.id) === String(costForm.vehicleId));
+
+  setVehicleCosts([
+    ...vehicleCosts,
+    {
+      ...costForm,
+      id: Date.now(),
+      plate: vehicle?.plate || "Chưa nhập xe",
+      type: vehicle?.type || ""
+    }
+  ]);
+
+  setCostForm(makeInitialCostForm());
+};
   return (
     <div className="mt-4 space-y-4">
       <div className={card}>
@@ -596,11 +611,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
         <div className={card}>Chưa có chi phí xe nào.</div>
       )}
 
-      {vehicleCosts.map(c => (
-        <div key={c.id} className={card}>
-       <div className="font-bold">
-  {c.plate ? `${c.plate} (${c.type})` : "Chưa nhập xe"}
-</div>
          <div className="text-sm text-slate-500">{c.date || c.month}</div>
           <div className="mt-2 font-bold text-blue-700">
             Tổng: {fmt(calcVehicleCost(c))} đ

@@ -381,7 +381,12 @@ function deleteVehicleCost(id) {
             </div>
           </div>
         </div>
-
+<div className="flex gap-2 mt-4">
+  <button onClick={() => setTab("dashboard")}>Dashboard</button>
+  <button onClick={() => setTab("trips")}>Chuyến</button>
+  <button onClick={() => setTab("costs")}>Chi phí</button>
+  <button onClick={() => setTab("vehicles")}>Xe</button>
+</div>
         {tab === "dashboard" && (
           <div className="mt-4 space-y-4">
             <div className="grid grid-cols-2 gap-3">

@@ -604,7 +604,7 @@ function ReportTab({ card, reports }) {
       <b>{value}</b>
     </div>
   );
-  function VehicleTab({
+function VehicleTab({
   card,
   input,
   label,
@@ -624,11 +624,49 @@ function ReportTab({ card, reports }) {
             <div className={label}>Biển số xe</div>
             <input
               className={input}
-              placeholder="VD: 60K-642.96"
               value={vehicleForm.plate}
               onChange={(e) =>
                 setVehicleForm({ ...vehicleForm, plate: e.target.value })
               }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Loại xe</div>
+            <select
+              className={input}
+              value={vehicleForm.type}
+              onChange={(e) =>
+                setVehicleForm({ ...vehicleForm, type: e.target.value })
+              }
+            >
+              <option>Xe công ty</option>
+              <option>Xe thuê ngoài</option>
+            </select>
+          </div>
+
+          <button onClick={saveVehicle} className={mainButton}>
+            + Thêm xe
+          </button>
+        </div>
+      </div>
+
+      <div className={card}>
+        <h3 className="font-bold mb-3">Xe đã nhập</h3>
+
+        {vehicles.length === 0 ? (
+          <p>Chưa có xe nào</p>
+        ) : (
+          vehicles.map((v) => (
+            <div key={v.id}>
+              {v.plate} - {v.type}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
             />
           </div>
 

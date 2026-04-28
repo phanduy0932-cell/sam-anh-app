@@ -667,7 +667,6 @@ function VehicleTab({
     </div>
   );
 }
-          </div>
 
           <div>
             <div className={label}>Loại xe</div>

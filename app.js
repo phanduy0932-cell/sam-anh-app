@@ -416,8 +416,20 @@ function deleteVehicleCost(id) {
         {tab === "tour" && <TourTab card={card} input={input} label={label} mainButton={mainButton} tourForm={tourForm} setTourForm={setTourForm} tourTrips={tourTrips} saveTourTrip={saveTourTrip} deleteTour={deleteTour} />}
         {tab === "quote" && <QuoteTab card={card} input={input} label={label} quoteForm={quoteForm} setQuoteForm={setQuoteForm} updateQuoteRoute={updateQuoteRoute} updateQuoteVehicle={updateQuoteVehicle} quoteRoute={quoteRoute} quoteCalc={quoteCalc} />}
        {tab === "costs" && (
+{tab === "costs" && (
   <CostTab
-        {tab === "vehicles" && (
+    card={card}
+    input={input}
+    label={label}
+    costForm={costForm}
+    setCostForm={setCostForm}
+    vehicleCosts={vehicleCosts}
+    saveVehicleCost={saveVehicleCost}
+    deleteVehicleCost={deleteVehicleCost}
+  />
+)}
+
+{tab === "vehicles" && (
   <VehicleTab
     card={card}
     input={input}
@@ -427,19 +439,6 @@ function deleteVehicleCost(id) {
     vehicleForm={vehicleForm}
     setVehicleForm={setVehicleForm}
     saveVehicle={saveVehicle}
-  />
-)}
-    card={card}
-    input={input}
-    label={label}
-    vehicles={companyVehicles}
-    mainButton={mainButton}
-    costForm={costForm}
-    setCostForm={setCostForm}
-    vehicleCosts={vehicleCosts}
-    saveVehicleCost={saveVehicleCost}
-    deleteVehicleCost={deleteVehicleCost}
-    vehicles={vehicles}
   />
 )}
              {tab === "report" && <ReportTab card={card} reports={reports} />}

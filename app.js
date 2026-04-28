@@ -487,18 +487,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   deleteVehicleCost,
   vehicles = [],
 }) {
-   const saveVehicleCost = () => {
-  const vehicle = vehicles.find(v => String(v.id) === String(costForm.vehicleId));
-
-  setVehicleCosts([
-    ...vehicleCosts,
-    {
-      ...costForm,
-      id: Date.now(),
-      plate: vehicle?.plate || "Chưa nhập xe",
-      type: vehicle?.type || ""
-    }
-  ]);
 
   setCostForm(makeInitialCostForm());
 };

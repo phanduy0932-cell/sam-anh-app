@@ -514,12 +514,12 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
 
           <div>
             <div className={label}>Đổ xăng / dầu</div>
-            <input
+        <input
   className={input}
   inputMode="numeric"
   value={costForm.fuelCost}
-  onChange={e => setCostForm({ ...costForm, fuelCost: e.target.value })}
-    </>
+  onChange={(e) => setCostForm({ ...costForm, fuelCost: e.target.value })}
+/>
           </div>
 
           <div>

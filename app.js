@@ -325,7 +325,7 @@ useEffect(() => {
   }
 
 const saveVehicleCost = () => {
-  const vehicle = vehicles.find(v => v.id == costForm.vehicleId);
+  const vehicle = vehicles.find(v => v.id === costForm.vehicleId);
 
   setVehicleCosts([
     ...vehicleCosts,

@@ -417,6 +417,18 @@ function deleteVehicleCost(id) {
         {tab === "quote" && <QuoteTab card={card} input={input} label={label} quoteForm={quoteForm} setQuoteForm={setQuoteForm} updateQuoteRoute={updateQuoteRoute} updateQuoteVehicle={updateQuoteVehicle} quoteRoute={quoteRoute} quoteCalc={quoteCalc} />}
        {tab === "costs" && (
   <CostTab
+        {tab === "vehicles" && (
+  <VehicleTab
+    card={card}
+    input={input}
+    label={label}
+    mainButton={mainButton}
+    vehicles={vehicles}
+    vehicleForm={vehicleForm}
+    setVehicleForm={setVehicleForm}
+    saveVehicle={saveVehicle}
+  />
+)}
     card={card}
     input={input}
     label={label}

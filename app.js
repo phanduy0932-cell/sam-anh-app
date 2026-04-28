@@ -615,88 +615,40 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   );
 }
 function ReportTab({ card, reports }) {
-  const Box = ({title, value}) => (
+  const Box = ({ title, value }) => (
     <div className="rounded-2xl bg-slate-50 p-3">
       <div className="text-slate-500">{title}</div>
       <b>{value}</b>
     </div>
   );
-  }
-function VehicleTab({
-  card,
-  input,
-  label,
-  mainButton,
-  vehicles,
-  vehicleForm,
-  setVehicleForm,
-  saveVehicle
-}) {
-  return (
-    <div className="mt-4 space-y-4">
-      <div className={card}>
-        <h2 className="text-xl font-bold mb-4">Danh sách xe</h2>
-
-        <div className="space-y-3">
-          <div>
-          
-          <div>
-            <div className={label}>Loại xe</div>
-            <select
-              className={input}
-              value={vehicleForm.type}
-              onChange={(e) =>
-                setVehicleForm({ ...vehicleForm, type: e.target.value })
-              }
-            >
-              <option>Xe công ty</option>
-              <option>Xe thuê ngoài</option>
-            </select>
-          </div>
-
-          <button onClick={saveVehicle} className={mainButton}>
-            + Thêm xe
-          </button>
-        </div>
-      </div>
-
-      <div className={card}>
-        <h3 className="font-bold mb-3">Xe đã nhập</h3>
-
-        {vehicles.length === 0 ? (
-          <p>Chưa có xe nào</p>
-        ) : (
-          vehicles.map((v) => (
-            <div key={v.id}>
-              {v.plate} - {v.type}
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <div className="mt-4 space-y-4">
+
+      {/* Báo cáo hôm nay */}
       <div className={card}>
         <h2 className="text-xl font-bold mb-3">Báo cáo hôm nay</h2>
+
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <Box title="Tổng chuyến" value={reports.today.count}/>
-          <Box title="Lợi nhuận" value={`${fmt(reports.today.profit)} đ`}/>
-          <Box title="DT xe công ty" value={`${fmt(reports.today.companyRevenue)} đ`}/>
-          <Box title="DT xe ngoài" value={`${fmt(reports.today.externalRevenue)} đ`}/>
+          <Box title="Tổng chuyến" value={reports.today.count} />
+          <Box title="Lợi nhuận" value={`${fmt(reports.today.profit)} đ`} />
+          <Box title="DT xe công ty" value={`${fmt(reports.today.companyRevenue)} đ`} />
+          <Box title="DT xe ngoài" value={`${fmt(reports.today.externalRevenue)} đ`} />
         </div>
       </div>
 
+      {/* Báo cáo tháng */}
       <div className={card}>
         <h2 className="text-xl font-bold mb-3">Báo cáo tháng này</h2>
+
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <Box title="Tổng chuyến" value={reports.month.count}/>
-          <Box title="Doanh thu" value={`${fmt(reports.month.revenue)} đ`}/>
-          <Box title="Chi phí" value={`${fmt(reports.month.cost)} đ`}/>
-          <Box title="Lợi nhuận" value={`${fmt(reports.month.profit)} đ`}/>
+          <Box title="Tổng chuyến" value={reports.month.count} />
+          <Box title="Doanh thu" value={`${fmt(reports.month.revenue)} đ`} />
+          <Box title="Chi phí" value={`${fmt(reports.month.cost)} đ`} />
+          <Box title="Lợi nhuận" value={`${fmt(reports.month.profit)} đ`} />
         </div>
       </div>
+
     </div>
   );
 }

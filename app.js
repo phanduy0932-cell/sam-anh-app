@@ -324,13 +324,21 @@ useEffect(() => {
     });
   }
 
-function saveVehicleCost() {
+const saveVehicleCost = () => {
+  const vehicle = vehicles.find(v => v.id == costForm.vehicleId);
+
   setVehicleCosts([
-    { ...costForm, id: Date.now() },
-    ...vehicleCosts
+    ...vehicleCosts,
+    {
+      ...costForm,
+      id: Date.now(),
+      plate: vehicle?.plate || "Không rõ",
+      type: vehicle?.type || ""
+    }
   ]);
+
   setCostForm(makeInitialCostForm());
-}
+};
   
 function deleteVehicleCost(id) {
   setVehicleCosts(vehicleCosts.filter(c => c.id !== id));

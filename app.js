@@ -162,6 +162,26 @@ function App() {
   plate: "",
   type: "Xe công ty"
 });
+  const saveVehicle = () => {
+  if (!vehicleForm.plate.trim()) {
+    alert("Nhập biển số xe");
+    return;
+  }
+
+  setVehicles([
+    ...vehicles,
+    {
+      id: Date.now(),
+      plate: vehicleForm.plate.trim().toUpperCase(),
+      type: vehicleForm.type
+    }
+  ]);
+
+  setVehicleForm({
+    plate: "",
+    type: "Xe công ty"
+  });
+};
   const [tab, setTab] = useState("dashboard");
   const [trips, setTrips] = useState([]);
   const [tourTrips, setTourTrips] = useState([]);

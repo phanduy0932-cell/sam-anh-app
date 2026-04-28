@@ -415,7 +415,6 @@ function deleteVehicleCost(id) {
         {tab === "trips" && <TripList trips={trips} card={card} onDelete={deleteTrip} />}
         {tab === "tour" && <TourTab card={card} input={input} label={label} mainButton={mainButton} tourForm={tourForm} setTourForm={setTourForm} tourTrips={tourTrips} saveTourTrip={saveTourTrip} deleteTour={deleteTour} />}
         {tab === "quote" && <QuoteTab card={card} input={input} label={label} quoteForm={quoteForm} setQuoteForm={setQuoteForm} updateQuoteRoute={updateQuoteRoute} updateQuoteVehicle={updateQuoteVehicle} quoteRoute={quoteRoute} quoteCalc={quoteCalc} />}
-       {tab === "costs" && (
 {tab === "costs" && (
   <CostTab
     card={card}

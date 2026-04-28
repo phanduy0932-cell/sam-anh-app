@@ -477,7 +477,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   vehicleCosts,
   saveVehicleCost,
   deleteVehicleCost,
-  vehicles
+  vehicles = [],
 }) {
   return (
     <div className="mt-4 space-y-4">

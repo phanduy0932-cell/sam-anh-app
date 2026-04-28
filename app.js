@@ -667,47 +667,6 @@ function VehicleTab({
     </div>
   );
 }
-
-          <div>
-            <div className={label}>Loại xe</div>
-            <select
-              className={input}
-              value={vehicleForm.type}
-              onChange={(e) =>
-                setVehicleForm({ ...vehicleForm, type: e.target.value })
-              }
-            >
-              <option>Xe công ty</option>
-              <option>Xe thuê ngoài</option>
-            </select>
-          </div>
-
-          <button onClick={saveVehicle} className={mainButton}>
-            + Thêm xe
-          </button>
-        </div>
-      </div>
-
-      <div className={card}>
-        <h3 className="font-bold mb-3">Xe đã nhập</h3>
-
-        {vehicles.length === 0 ? (
-          <p className="text-gray-500">Chưa có xe nào.</p>
-        ) : (
-          <div className="space-y-2">
-            {vehicles.map((v) => (
-              <div key={v.id} className="border rounded-xl p-3">
-                <div className="font-bold">{v.plate}</div>
-                <div className="text-sm text-gray-500">{v.type}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
   return (
     <div className="mt-4 space-y-4">
       <div className={card}>

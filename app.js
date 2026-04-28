@@ -488,8 +488,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   vehicles = [],
 }) {
 
-  setCostForm(makeInitialCostForm());
-};
   return (
     <div className="mt-4 space-y-4">
       <div className={card}>

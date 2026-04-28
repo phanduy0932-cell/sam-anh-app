@@ -639,14 +639,7 @@ function VehicleTab({
 
         <div className="space-y-3">
           <div>
-            <div className={label}>Biển số xe</div>
-<input
-  className={input}
-  value={vehicleForm.plate}
-  onChange={(e) => setVehicleForm({ ...vehicleForm, plate: e.target.value })}
-/>
-    </div>
-
+          
           <div>
             <div className={label}>Loại xe</div>
             <select

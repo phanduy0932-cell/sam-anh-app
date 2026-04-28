@@ -486,6 +486,24 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
 
  <div className="space-y-3">
   <div>
+    <div>
+  <div className={label}>Chọn xe</div>
+  <select
+    className={input}
+    value={costForm.vehicleId || ""}
+    onChange={(e) =>
+      setCostForm({ ...costForm, vehicleId: e.target.value })
+    }
+  >
+    <option value="">-- Chọn xe --</option>
+
+    {vehicles.map((v) => (
+      <option key={v.id} value={v.id}>
+        {v.plate} ({v.type})
+      </option>
+    ))}
+  </select>
+</div>
     <div className={label}>Ngày chi phí</div>
     <input
       className={input}

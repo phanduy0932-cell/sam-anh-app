@@ -428,8 +428,7 @@ function deleteVehicleCost(id) {
     deleteVehicleCost={deleteVehicleCost}
   />
 )}
-
-{tab === "vehicles" && (
+ {tab === "vehicles" && (
   <VehicleTab
     card={card}
     input={input}
@@ -441,7 +440,8 @@ function deleteVehicleCost(id) {
     saveVehicle={saveVehicle}
   />
 )}
-             {tab === "report" && <ReportTab card={card} reports={reports} />}
+
+       {tab === "report" && <ReportTab card={card} reports={reports} />}
 
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200"><div className="max-w-md mx-auto grid grid-cols-6 gap-1 px-2 py-2 text-center text-[11px] font-semibold text-slate-600">
           {[ ["dashboard","Tổng quan"], ["entry","Nhập"], ["trips","Chuyến"], ["tour","Xe DL"], ["quote","Báo giá"],["costs","Chi phí"],["report","Báo cáo"] ].map(([key, text]) => <button key={key} onClick={() => setTab(key)} className={`rounded-2xl py-3 ${tab === key ? "bg-blue-700 text-white" : "bg-slate-100"}`}>{text}</button>)}

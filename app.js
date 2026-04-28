@@ -614,41 +614,69 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
     </div>
   );
 }
-function ReportTab({ card, reports }) {
-  const Box = ({ title, value }) => (
-    <div className="rounded-2xl bg-slate-50 p-3">
-      <div className="text-slate-500">{title}</div>
-      <b>{value}</b>
-    </div>
-  );
-
+function VehicleTab({
+  card,
+  input,
+  label,
+  mainButton,
+  vehicles,
+  vehicleForm,
+  setVehicleForm,
+  saveVehicle
+}) {
   return (
     <div className="mt-4 space-y-4">
-
-      {/* Báo cáo hôm nay */}
       <div className={card}>
-        <h2 className="text-xl font-bold mb-3">Báo cáo hôm nay</h2>
+        <h2 className="text-xl font-bold mb-4">Danh sách xe</h2>
 
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          <Box title="Tổng chuyến" value={reports.today.count} />
-          <Box title="Lợi nhuận" value={`${fmt(reports.today.profit)} đ`} />
-          <Box title="DT xe công ty" value={`${fmt(reports.today.companyRevenue)} đ`} />
-          <Box title="DT xe ngoài" value={`${fmt(reports.today.externalRevenue)} đ`} />
+        <div className="space-y-3">
+          <div>
+            <div className={label}>Biển số xe</div>
+            <input
+              className={input}
+              value={vehicleForm.plate}
+              onChange={(e) =>
+                setVehicleForm({ ...vehicleForm, plate: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <div className={label}>Loại xe</div>
+            <select
+              className={input}
+              value={vehicleForm.type}
+              onChange={(e) =>
+                setVehicleForm({ ...vehicleForm, type: e.target.value })
+              }
+            >
+              <option>Xe công ty</option>
+              <option>Xe thuê ngoài</option>
+            </select>
+          </div>
+
+          <button onClick={saveVehicle} className={mainButton}>
+            + Thêm xe
+          </button>
         </div>
       </div>
 
-      {/* Báo cáo tháng */}
       <div className={card}>
-        <h2 className="text-xl font-bold mb-3">Báo cáo tháng này</h2>
+        <h3 className="font-bold mb-3">Xe đã nhập</h3>
 
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          <Box title="Tổng chuyến" value={reports.month.count} />
-          <Box title="Doanh thu" value={`${fmt(reports.month.revenue)} đ`} />
-          <Box title="Chi phí" value={`${fmt(reports.month.cost)} đ`} />
-          <Box title="Lợi nhuận" value={`${fmt(reports.month.profit)} đ`} />
-        </div>
+        {vehicles.length === 0 ? (
+          <p className="text-gray-500">Chưa có xe nào.</p>
+        ) : (
+          <div className="space-y-2">
+            {vehicles.map((v) => (
+              <div key={v.id} className="border rounded-xl p-3">
+                <div className="font-bold">{v.plate}</div>
+                <div className="text-sm text-gray-500">{v.type}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
     </div>
   );
 }

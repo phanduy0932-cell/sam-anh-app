@@ -437,7 +437,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   setCostForm,
   vehicleCosts,
   saveVehicleCost,
-  deleteVehicleCost
+  deleteVehicleCost,
   vehicles
 }) {
   return (

@@ -528,8 +528,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
       {v.label}
     </option>
   ))}
-</select>
-          </div>
 
           <div>
             <div className={label}>Đổ xăng / dầu</div>

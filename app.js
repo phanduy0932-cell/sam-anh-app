@@ -604,6 +604,7 @@ function ReportTab({ card, reports }) {
       <b>{value}</b>
     </div>
   );
+  }
 function VehicleTab({
   card,
   input,

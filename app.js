@@ -609,7 +609,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
           </button>
         </div>
       )}
-    </div>
   );
 }
 function VehicleTab({

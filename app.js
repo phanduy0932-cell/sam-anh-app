@@ -515,11 +515,11 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
           <div>
             <div className={label}>Đổ xăng / dầu</div>
             <input
-              className={input}
-              inputMode="numeric"
-              value={costForm.fuelCost}
-              onChange={e => setCostForm({ ...costForm, fuelCost: e.target.value })}
-            />
+  className={input}
+  inputMode="numeric"
+  value={costForm.fuelCost}
+  onChange={e => setCostForm({ ...costForm, fuelCost: e.target.value })}
+    </>
           </div>
 
           <div>
@@ -622,14 +622,12 @@ function VehicleTab({
         <div className="space-y-3">
           <div>
             <div className={label}>Biển số xe</div>
-            <input
-              className={input}
-              value={vehicleForm.plate}
-              onChange={(e) =>
-                setVehicleForm({ ...vehicleForm, plate: e.target.value })
-              }
-            />
-          </div>
+<input
+  className={input}
+  value={vehicleForm.plate}
+  onChange={(e) => setVehicleForm({ ...vehicleForm, plate: e.target.value })}
+/>
+    </div>
 
           <div>
             <div className={label}>Loại xe</div>

@@ -158,6 +158,10 @@ function App() {
   const [vehicles, setVehicles] = useState(
   JSON.parse(localStorage.getItem("vehicles")) || []
 );
+  const [vehicleForm, setVehicleForm] = useState({
+  plate: "",
+  type: "Xe công ty"
+});
   const [tab, setTab] = useState("dashboard");
   const [trips, setTrips] = useState([]);
   const [tourTrips, setTourTrips] = useState([]);

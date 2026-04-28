@@ -155,6 +155,9 @@ function makeInitialQuoteForm() {
 }
 
 function App() {
+  const [vehicles, setVehicles] = useState(
+  JSON.parse(localStorage.getItem("vehicles")) || []
+);
   const [tab, setTab] = useState("dashboard");
   const [trips, setTrips] = useState([]);
   const [tourTrips, setTourTrips] = useState([]);
@@ -164,16 +167,22 @@ function App() {
   const [tourForm, setTourForm] = useState(makeInitialTourForm());
   const [quoteForm, setQuoteForm] = useState(makeInitialQuoteForm());
 
+useEffect(() => {
+  try {
+    const savedTrips = localStorage.getItem(STORAGE_TRIPS);
+    const savedTours = localStorage.getItem(STORAGE_TOURS);
+    const savedCosts = localStorage.getItem(STORAGE_COSTS);
+
+    if (savedTrips) setTrips(JSON.parse(savedTrips));
+    if (savedTours) setTourTrips(JSON.parse(savedTours));
+    if (savedCosts) setVehicleCosts(JSON.parse(savedCosts));
+  } catch (err) {
+    console.log("Không đọc được dữ liệu đã lưu", err);
+  }
+}, []);
   useEffect(() => {
-    try {
-      const savedTrips = localStorage.getItem(STORAGE_TRIPS);
-      const savedTours = localStorage.getItem(STORAGE_TOURS);
-      const savedCosts = localStorage.getItem(STORAGE_COSTS);
-      if (savedTrips) setTrips(JSON.parse(savedTrips));
-      if (savedTours) setTourTrips(JSON.parse(savedTours));
-      if (savedCosts) setVehicleCosts(JSON.parse(savedCosts));
-    } catch (err) { console.log("Không đọc được dữ liệu đã lưu", err); }
-  }, []);
+  localStorage.setItem("vehicles", JSON.stringify(vehicles));
+}, [vehicles]);
   useEffect(() => { localStorage.setItem(STORAGE_TRIPS, JSON.stringify(trips)); }, [trips]);
   useEffect(() => { localStorage.setItem(STORAGE_TOURS, JSON.stringify(tourTrips)); }, [tourTrips]);
   useEffect(() => {
@@ -394,6 +403,7 @@ function deleteVehicleCost(id) {
     vehicleCosts={vehicleCosts}
     saveVehicleCost={saveVehicleCost}
     deleteVehicleCost={deleteVehicleCost}
+    vehicles={vehicles}
   />
 )}
              {tab === "report" && <ReportTab card={card} reports={reports} />}
@@ -428,6 +438,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   vehicleCosts,
   saveVehicleCost,
   deleteVehicleCost
+  vehicles
 }) {
   return (
     <div className="mt-4 space-y-4">

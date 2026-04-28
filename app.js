@@ -430,6 +430,7 @@ function deleteVehicleCost(id) {
     vehicleCosts={vehicleCosts}
     saveVehicleCost={saveVehicleCost}
     deleteVehicleCost={deleteVehicleCost}
+    vehicles={vehicles}
   />
 )}
  {tab === "vehicles" && (

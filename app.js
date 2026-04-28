@@ -622,7 +622,7 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
             Xóa
           </button>
         </div>
-      ))}
+      )}
     </div>
   );
 }

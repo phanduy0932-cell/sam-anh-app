@@ -431,7 +431,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
   card,
   input,
   label,
-  vehicles,
   mainButton,
   costForm,
   setCostForm,

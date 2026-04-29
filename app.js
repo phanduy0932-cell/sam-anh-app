@@ -596,20 +596,22 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
       {vehicleCosts.length === 0 && (
         <div className={card}>Chưa có chi phí xe nào.</div>
       )}
-
-         <div className="text-sm text-slate-500">{c.date || c.month}</div>
-          <div className="mt-2 font-bold text-blue-700">
-            Tổng: {fmt(calcVehicleCost(c))} đ
-          </div>
-          <button
-            className="mt-2 text-red-600 font-semibold"
-            onClick={() => deleteVehicleCost(c.id)}
-          >
-            Xóa
-          </button>
-        </div>
-     )}
+{vehicleCosts.map((c) => (
+ {vehicleCosts.map((c) => (
+  <div key={c.id} className={card}>
+    <div className="text-sm text-slate-500">{c.date || c.month}</div>
+    <div className="mt-2 font-bold text-blue-700">
+      Tổng: {fmt(calcVehicleCost(c))} đ
+    </div>
+    <button
+      className="mt-2 text-red-600 font-semibold"
+      onClick={() => deleteVehicleCost(c.id)}
+    >
+      Xóa
+    </button>
   </div>
+))}
+        </div>
 </div>
 );
 }

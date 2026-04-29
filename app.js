@@ -615,6 +615,16 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
 </div>
 );
 }
+function ReportTab({ card }) {
+  return (
+    <div className="mt-4 space-y-4">
+      <div className={card}>
+        <h2 className="text-xl font-bold mb-4">Báo cáo</h2>
+        <div>Chưa có dữ liệu báo cáo.</div>
+      </div>
+    </div>
+  );
+}
 function VehicleTab({
   card,
   input,

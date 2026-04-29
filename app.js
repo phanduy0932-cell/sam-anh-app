@@ -597,7 +597,6 @@ function QuoteTab({ card, input, label, quoteForm, setQuoteForm, updateQuoteRout
         <div className={card}>Chưa có chi phí xe nào.</div>
       )}
 {vehicleCosts.map((c) => (
- {vehicleCosts.map((c) => (
   <div key={c.id} className={card}>
     <div className="text-sm text-slate-500">{c.date || c.month}</div>
     <div className="mt-2 font-bold text-blue-700">
